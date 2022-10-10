@@ -1,9 +1,12 @@
 package test.suites;
 
 import calls.CrocodilesAPI;
-import data.models.*;
+import data.models.models.*;
+import data.models.provaiders.CrocodileProvider;
 import jdk.jfr.Description;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import test.asserts.CrocodileAsserts;
 import test.common.TestBase;
@@ -11,8 +14,14 @@ import test.common.TestBase;
 
 public class CrocodileTests extends TestBase {
 
-
     public CrocodileAsserts crocodileAsserts = new CrocodileAsserts();
+    CreateCrocodileRequest createCrocodileRequest;
+
+    //String id = CrocodilesAPI.createNewCrocodile(createCrocodileRequest).getId();
+   @BeforeMethod
+    public  void prepareTestData(){
+    createCrocodileRequest = CrocodileProvider.prepareCrocodileRequest();
+    }
 
     @Test
     public void loginTest() {
@@ -22,9 +31,8 @@ public class CrocodileTests extends TestBase {
     @Test
     @Description("verify crocodile is created")
     public void createCrocodileTest() {
-        CreateCrocodileRequest createCrocodileRequest = new CreateCrocodileRequest("Mila", "M", "2020-12-12");
         SingleCrocodileResponse createCrocodileResponse = CrocodilesAPI.createNewCrocodile(accessToken, createCrocodileRequest);
-        crocodileAsserts.assertCreateNewCrocodile(createCrocodileResponse, createCrocodileRequest);
+        crocodileAsserts.assertCreateNewCrocodile(createCrocodileResponse, createCrocodileRequest, accessToken);
     }
 
     @Test
@@ -70,9 +78,9 @@ public class CrocodileTests extends TestBase {
     public void updateCrocodile() {
         SingleCrocodileResponse singleCrocodileResponse = CrocodilesAPI.getCrocodileByIdResponse(accessToken);
         singleCrocodileResponse.setName("Jasmina");
-       singleCrocodileResponse.setAge(2);
+        singleCrocodileResponse.setAge(2);
         singleCrocodileResponse.setSex("F");
-       singleCrocodileResponse.setDateOfBirth("2020-05-10");
+        singleCrocodileResponse.setDateOfBirth("2020-05-10");
       SingleCrocodileResponse updateCrocodileResponse = CrocodilesAPI.updateCrocodile(accessToken,singleCrocodileResponse);
       crocodileAsserts.assertUpdateMyCrocodile(updateCrocodileResponse, singleCrocodileResponse);
 

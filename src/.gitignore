@@ -1,0 +1,5 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+#Config file
+src/main/resources/env.properties
